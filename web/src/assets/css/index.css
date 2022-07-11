@@ -1,0 +1,62 @@
+@import 'lxgw-wenkai-webfont/style.css';
+/*@font-face {*/
+/*    font-family: "Web";*/
+/*    src: url("font/web.woff");*/
+/*}*/
+
+/*body {*/
+/*    font-family: Web, serif;*/
+/*}*/
+
+/*body {*/
+/*    font-family: PingFang SC, HarmonyOS_Regular, Helvetica Neue, Microsoft YaHei, sans-serif !important;*/
+/*    font-weight: 400;*/
+/*    overflow-x: auto;*/
+/*}*/
+/*element-plus引用tailwind的css库导致button样式失败， https://foggy.shop/archives/863278d6.html*/
+
+/*@tailwind base;*/
+@tailwind components;
+@tailwind utilities;
+
+/*引用大型自定义字体库*/
+
+
+/*使用 https://github.com/chawyehsu/lxgw-wenkai-webfont 打包的web字体*/
+body {
+    font-family: "LXGW WenKai", sans-serif;
+}
+
+
+
+
+.recomName {
+    position: relative;
+    margin-left: 1rem;
+    font-size: 0.7rem;
+    bottom: 20%;
+}
+
+/*点击动画*/
+.cell-hover-class {
+    background-color: rgb(235, 237, 238);
+    opacity: 0.8;
+}
+
+.comment-avatar{
+    box-shadow: 2px 2px 3px #e1e1e1;
+
+}
+.comment{
+    padding-top: 10px;
+    border-bottom:1px solid #e8e8e8;
+}
+.comment-name{
+    margin-left: 50px;
+}
+.van-divider{
+    margin: unset;
+}
+.comment-content{
+    padding: 2px 0 20px 50px;
+}

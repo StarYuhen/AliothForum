@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module type="WEB_MODULE" version="4">
+  <component name="Go" enabled="true" />
+  <component name="NewModuleRootManager">
+    <content url="file://$MODULE_DIR$">
+      <excludeFolder url="file://$MODULE_DIR$/.idea/dataSources" />
+      <excludeFolder url="file://$MODULE_DIR$/.idea/httpRequests" />
+      <excludeFolder url="file://$MODULE_DIR$/web/.idea" />
+      <excludeFolder url="file://$MODULE_DIR$/WebNuxt/.idea" />
+      <excludeFolder url="file://$MODULE_DIR$/Docx" />
+      <excludeFolder url="file://$MODULE_DIR$/BackEnd/WebFile/upload/file" />
+      <excludeFolder url="file://$MODULE_DIR$/BackEnd/test" />
+      <excludeFolder url="file://$MODULE_DIR$/BackEnd/WebFile" />
+    </content>
+    <orderEntry type="inheritedJdk" />
+    <orderEntry type="sourceFolder" forTests="false" />
+  </component>
+</module>
