@@ -17,4 +17,9 @@ func UserRouter(engine *gin.RouterGroup) {
 	engine.GET("/UrlQrCode", user.UrlQrCode)
 	// 获取评论数据
 	engine.POST("/ReadComment", user.ReadComment)
+	// 增加点赞
+	engine.GET("/AddLike", user.ClickLike)
+	// 上传文件，用于贴子，评论，文章
+	engine.POST("/ArticleUploadFile", user.ArticleUploadFile)
+
 }

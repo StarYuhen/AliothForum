@@ -7,7 +7,6 @@ require (
 	github.com/danielkov/gin-helmet v0.0.0-20171108135313-1387e224435e
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/didip/tollbooth v4.0.2+incompatible
-	github.com/douyacun/gositemap v0.0.4
 	github.com/dvwright/xss-mw v0.0.0-20191029162136-7a0dab86d8f6
 	github.com/gin-contrib/gzip v0.0.5
 	github.com/gin-contrib/sessions v0.0.5
@@ -21,8 +20,8 @@ require (
 	github.com/panjf2000/ants v1.3.0
 	github.com/sirupsen/logrus v1.8.1
 	github.com/skip2/go-qrcode v0.0.0-20200617195104-da1b6568686e
+	github.com/streadway/amqp v1.0.0
 	github.com/tencentyun/cos-go-sdk-v5 v0.7.34
-	golang.org/x/net v0.0.0-20220225172249-27dd8689420f
 	gopkg.in/gomail.v2 v2.0.0-20160411212932-81ebce5c23df
 	gopkg.in/yaml.v2 v2.4.0
 	gorm.io/driver/mysql v1.3.3
@@ -67,6 +66,7 @@ require (
 	github.com/ugorji/go/codec v1.2.6 // indirect
 	golang.org/x/crypto v0.0.0-20210915214749-c084706c2272 // indirect
 	golang.org/x/image v0.0.0-20190802002840-cff245a6509b // indirect
+	golang.org/x/net v0.0.0-20220225172249-27dd8689420f // indirect
 	golang.org/x/sys v0.0.0-20220408201424-a24fb2fb8a0f // indirect
 	golang.org/x/text v0.3.7 // indirect
 	golang.org/x/time v0.0.0-20190308202827-9d24e82272b4 // indirect

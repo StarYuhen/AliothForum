@@ -34,7 +34,7 @@ func GinServer() {
 	// 绑定简易安全中间件
 	engine.Use(helmet.Default())
 	// 增加接口并发限制中间件--不需要，自己重新写一个ip限制接口中间件
-	engine.Use(use.MaxAllowed(config.StoreConfig.WebConfig.MaxAllowed))
+	// engine.Use(use.MaxAllowed(config.StoreConfig.WebConfig.MaxAllowed))
 	// 启用gzip
 	engine.Use(gzip.Gzip(gzip.DefaultCompression))
 	// 增加ip规定时间限制 压测命令 yace -c 10000 -n 100 -u http://localhost:47/api/user/JwtDevice
@@ -54,7 +54,7 @@ func GinServer() {
 	// 检测是否是爬虫中间件
 	engine.Use(use.DetectionCrawler())
 	// 设置gin上传文件大小
-	engine.MaxMultipartMemory = 8 << 20
+	engine.MaxMultipartMemory = 3 << 20 // 3MB
 	// 初始化路径
 	Major := engine.Group("/api/major")     // 重要接口
 	Tourist := engine.Group("/api/tourist") // 游客状态可以使用的接口

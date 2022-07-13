@@ -80,6 +80,14 @@ module.exports = defineConfig({
             ]
         }
     },
+    // css设置可以使用less后缀类型
+    // css: {
+    //     loaderOptions: {
+    //         less: {
+    //             javascriptEnabled: true
+    //         }
+    //     }
+    // }
 
     // // 配置PWA 本地测试不起效果，可以使用browser-sync dist 来使用
     // pwa: {
@@ -96,3 +104,4 @@ module.exports = defineConfig({
     //   workboxPluginMode: 'InjectManifest'
     // }
 })
+

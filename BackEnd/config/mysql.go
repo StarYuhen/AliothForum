@@ -9,7 +9,11 @@ import (
 
 // 初始化数据库配置
 func sqlInit() *gorm.DB {
-	sqlInit := fmt.Sprintf("%s:%s@tcp(localhost:3306)/%s?utf8mb4&parseTime=True&loc=Local", StoreConfig.MYSQLConfig.User, StoreConfig.MYSQLConfig.Password, StoreConfig.MYSQLConfig.Architecture)
+	sqlInit := fmt.Sprintf("%s:%s@tcp(%s)/%s?utf8mb4&parseTime=True&loc=Local",
+		StoreConfig.MYSQLConfig.User,
+		StoreConfig.MYSQLConfig.Password,
+		StoreConfig.MYSQLConfig.Addr,
+		StoreConfig.MYSQLConfig.Architecture)
 	SQL, err := gorm.Open(mysql.Open(sqlInit), &gorm.Config{})
 	if err != nil {
 		logrus.Error("数据库链接报错：", err)

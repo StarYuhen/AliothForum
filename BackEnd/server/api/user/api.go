@@ -31,7 +31,7 @@ func UploadImgUser(ctx *gin.Context) {
 		return
 	}
 	// 设置保存的文件名
-	FilePathNew := expen.CreatUid() + suffix
+	FilePathNew := uuid.NewString() + suffix
 	// 设置本机oss路径
 	ossPath := config.StoreConfig.WebFile.UploadImg + FilePathNew
 	// 保存文件
@@ -131,7 +131,7 @@ func ReadComment(ctx *gin.Context) {
 	index, max := 0, 0
 	// 使用分页器获取内容
 	if PostComment.Number == 1 {
-		index = 1
+		index = 0
 		max = 10
 	} else {
 		index = (PostComment.Number-1)*10 + 1
@@ -144,5 +144,63 @@ func ReadComment(ctx *gin.Context) {
 
 // ClickLike 请求点赞
 func ClickLike(ctx *gin.Context) {
+	// 查询文章Ip里面是否有相同的IP，单个文章相同IP不作数
+	uid, _ := ctx.Get("uid")
+	ID, _ := ctx.GetQuery("ID")
+	if Null, _ := expen.HaseRead(config.RedisComment, ID, uid.(string)+"_like"); !Null {
+		// 插入点赞UID和点赞数量
+		expen.HaseSet(config.RedisComment, ID, uid.(string)+"_like", true)
+		expen.HashInsertAdd(config.RedisArticle, ID, "Likes")
+		ctx.JSON(http.StatusOK, expen.Success(nil, "点赞成功"))
+	}
+	ctx.JSON(http.StatusOK, expen.Success(nil, "您已点过赞"))
+}
 
+// ArticleUploadFile 上传文件
+func ArticleUploadFile(ctx *gin.Context) {
+	file, err := ctx.FormFile("file")
+	if err != nil {
+		logrus.Error("上传文件错误--->", err)
+		ctx.JSON(http.StatusOK, expen.MissingParametersFun("上传文件错误"))
+		return
+	}
+	logrus.Info("传输的文件名字--->", file.Filename)
+	suffix := PathText(file.Filename)
+	if FileType(suffix) {
+		logrus.Error("传输文件名字不对--->", err)
+		ctx.JSON(http.StatusOK, expen.MissingParametersFun("传输文件后缀名错误"))
+		return
+	}
+	// 设置保存的文件名
+	FilePathNew := uuid.NewString() + suffix
+	// 设置本机oss路径
+	ossPath := config.StoreConfig.WebFile.UploadFile + FilePathNew
+	// 保存文件
+	err = ctx.SaveUploadedFile(file, "./"+ossPath)
+
+	if err != nil {
+		logrus.Error("保存文件错误--->", err)
+		ctx.JSON(http.StatusOK, expen.InternalErrorFun("保存文件错误"))
+		return
+	}
+	dir, _ := os.Getwd()
+	// 上传到oss
+	var tx = new(expen.TxOssBuckets)
+	tx.FileReader = FilePathNew
+	tx.FilePathClient = ossPath
+	tx.FilePathBackEnd = dir + "/" + ossPath
+	if !tx.TxUploadBuckets() {
+		logrus.Error("文件上传oss失败")
+		config.Pool.Submit(func() {
+			os.Remove(tx.FilePathBackEnd)
+		})
+		ctx.JSON(http.StatusOK, expen.InternalErrorFun("上传oss错误"))
+		return
+	}
+	// 删除文件
+	config.Pool.Submit(func() {
+		os.Remove(tx.FilePathBackEnd)
+	})
+	img := config.StoreConfig.OSS.TxConfig.OSSUrl + "/" + ossPath
+	ctx.JSON(http.StatusOK, expen.Success(img, "上传文件成功"))
 }

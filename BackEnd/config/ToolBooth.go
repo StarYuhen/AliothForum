@@ -7,6 +7,7 @@ import (
 )
 
 // TooBooth 用于函数初始化限流的配置内容
+// 会自动根据URL和IP来进行限制
 func TooBooth() *limiter.Limiter {
 	lmt := tollbooth.NewLimiter(StoreConfig.WebConfig.TollBooth.TokenBuckets,
 		&limiter.ExpirableOptions{DefaultExpirationTTL: StoreConfig.WebConfig.TollBooth.DefaultExpirationTTL * time.Hour})

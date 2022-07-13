@@ -17,6 +17,7 @@ type StructConfig struct {
 	WebFile             webFile             `yaml:"WebFile"`
 	OSS                 oss                 `yaml:"OSS"`
 	WebConfig           webConfig           `yaml:"WebConfig"`
+	RabBitMQ            rabBitMQ            `yaml:"RabBitMQ"`
 	ElasticsearchConfig elasticsearchConfig `yaml:"ElasticsearchConfig"`
 }
 
@@ -31,6 +32,7 @@ type mysqlConfig struct {
 	User         string   `yaml:"User"`
 	Password     string   `yaml:"Password"`
 	Architecture string   `yaml:"Architecture"`
+	Addr         string   `yaml:"Addr"`
 	Table        []string `yaml:"Table"`
 }
 
@@ -66,6 +68,13 @@ type webFile struct {
 	UploadFileType []string `yaml:"UploadFileType"`
 	UploadFileSize int      `yaml:"UploadFileSize"`
 	UserImgUrl     string   `yaml:"UserImgUrl"`
+}
+
+type rabBitMQ struct {
+	User        string `yaml:"User"`
+	PassWord    string `yaml:"PassWord"`
+	Addr        string `yaml:"Addr"`
+	VirtualHost string `yaml:"VirtualHost"`
 }
 
 type oss struct {
@@ -106,6 +115,7 @@ type elasticsearchConfig struct {
 	URL      string `yaml:"URL"`
 	User     string `yaml:"User"`
 	PassWord string `yaml:"PassWord"`
+	Gzip     bool   `yaml:"Gzip"`
 }
 
 //go:embed config.yaml
@@ -120,8 +130,10 @@ var MysqlURL = sqlInit()
 // RedisWebExpen redis的缓存器驱动web杂项的
 var RedisWebExpen = redisWebExpen()
 
+// RedisArticle 储存文章内容
 var RedisArticle = redisArticle()
 
+// RedisComment 储存文章的点赞，收藏，ip
 var RedisComment = redisComment()
 
 // MailQQ QQ邮件发送驱动器
@@ -141,6 +153,10 @@ var ElasticsearchEngine = ElasticsearchClient()
 
 // Limit 初始化速率限制器
 var Limit = TooBooth()
+
+// RabBitMQEngine 启动消息队列
+// 单机用个der MQ
+var RabBitMQEngine = RabBitMQ()
 
 // Init 初始化配置文件内容
 func Init() StructConfig {

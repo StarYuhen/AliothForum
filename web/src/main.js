@@ -1,7 +1,6 @@
 import {createApp} from 'vue'
 //绑定起始vue
 import App from './App.vue'
-
 // //按需引用vant组件
 import Vant from 'vant'
 //绑定css文件
@@ -10,11 +9,13 @@ import router from "@/assets/js/router";
 // 绑定element框架
 import ElementPlus from 'element-plus'
 import 'element-plus/dist/index.css'
-// // 绑定md解析库
+// // 绑定md解析库 这个库暂时不支持vue3
 // import MavonEditor from 'mavon-editor'
 // import 'mavon-editor/dist/css/index.css'
+import "vditor/src/assets/less/index.less"
 // 自定义css文件
 import "./assets/css/index.css"
+
 
 // // 使用自定义Vue的PWA插件，减少资源使用  http://kmanong.top/kmn/qxw/form/article?id=70335&cate=52
 // import './registerServiceWorker'
@@ -53,9 +54,13 @@ app.use(router)
 // 需要动态加载标签，需要使用vuex的对象管理
 // app.use(store)
 
-// 绑定组件
-// app.component("mavon-editor", MavonEditor);
-// 绑定md文件解析库
-// app.use(MavonEditor)
 
 app.mount('#app');
+
+// 开发完后使用 https://tauri.app/zh/ 进行跨平台打包
+
+// // 注册组件
+// app.component("ArticleAndComment", {
+//     props: ['Type'],
+//     template: ArticleAndComment
+// })

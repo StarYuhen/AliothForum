@@ -78,11 +78,8 @@
     <van-cell title="网站介绍" is-link/>
     <van-cell title="更新日志" is-link/>
     <van-cell title="分享网站" is-link @click="Config.ShareList=true"/>
-    <van-share-sheet
+    <OptionListShare
         v-model:show="Config.ShareList"
-        title="立即分享给好友"
-        :options="Config.OptionListShare"
-        @select="ClickShareSelect"
     />
     <van-cell title="关于" is-link @click="ClickDialogAbout"/>
   </van-cell-group>
@@ -98,10 +95,11 @@ import {Dialog, Toast} from "vant";
 import UserApi from "@/assets/js/RouterUser";
 import TouristApi from "@/assets/js/RouterTourist";
 import {ref} from "vue";
-import Expen from "@/assets/js/expen";
+import OptionListShare from "@/components/Moblie/OptionListShare";
 
 export default {
   name: "settingMoblie",
+  components: {OptionListShare},
   setup() {
     const MailTime = ref(60 * 1000);
     return {MailTime}
@@ -115,21 +113,6 @@ export default {
         MailTimeClick: 0,
         ImgUrl: "",
         Name: "",
-        ShareList: false,
-        QRCode: "",
-        QRCodeBool: false,
-        OptionListShare: [[
-          {name: '微信', icon: 'wechat'},
-          {name: '朋友圈', icon: 'wechat-moments'},
-          {name: '微博', icon: 'weibo'},
-          {name: 'QQ', icon: 'qq'},
-        ],
-          [
-            {name: '复制链接', icon: 'link'},
-            {name: '海报', icon: 'poster'},
-            {name: '二维码', icon: 'qrcode'},
-          ]
-        ]
       },
       Account: {
         UserMail: "",
@@ -190,21 +173,6 @@ export default {
         // on close
       });
     },
-    // 点击分享后的处理
-    ClickShareSelect: async function (option) {
-      let LocationURL = window.location.href
-      switch (option.name) {
-        case '二维码':
-          this.Config.QRCode = await UserApi.GetQrCode(LocationURL)
-          console.log(this.Config.QRCode)
-          this.Config.QRCodeBool = true
-          break
-        case '复制链接':
-          await Expen.CopySrc(LocationURL)
-          Toast("已复制链接到剪切板")
-          break
-      }
-    }
   },
   async mounted() {
     // 设置账号状态

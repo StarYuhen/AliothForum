@@ -11,11 +11,11 @@ import (
 func ElasticsearchClient() *elastic.Client {
 	client, err := elastic.NewClient(
 		// 设置ES服务地址，支持多个地址
-		elastic.SetURL("http://localhost:9200"),
+		elastic.SetURL(StoreConfig.ElasticsearchConfig.URL),
 		// 设置基于http base auth验证的账号和密码
 		// elastic.SetBasicAuth("user", "secret"),
 		// 启用gzip压缩
-		elastic.SetGzip(true),
+		elastic.SetGzip(StoreConfig.ElasticsearchConfig.Gzip),
 		// 发生连接失败，就用这个,将其设置为false
 		elastic.SetSniff(false),
 		// 设置监控检查时间间隔

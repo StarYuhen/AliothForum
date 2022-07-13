@@ -2,7 +2,7 @@ package UserAccountTable
 
 import (
 	"BackEnd/config"
-	"BackEnd/expen"
+	"github.com/google/uuid"
 	"github.com/sirupsen/logrus"
 	"strings"
 	"time"
@@ -42,7 +42,7 @@ func (r *Register) RegisterCreat(reg RegisterAccountStruct) bool {
 	r.Password = reg.Password
 	r.Auto = "普通用户"
 	r.Times = time.Now().Unix()
-	r.UID = expen.CreatUid()
+	r.UID = uuid.NewString()
 	r.Img = config.StoreConfig.WebFile.UserImgUrl
 	// 是QQ邮箱则是QQ头像否则就是默认头像
 	if QQMail := strings.Contains(r.User, "@qq.com"); QQMail {
