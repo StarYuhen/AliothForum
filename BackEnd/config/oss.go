@@ -24,6 +24,7 @@ func TxOSS() *tx.Client {
 		},
 	})
 	logrus.Info("已初始化腾讯云对象储存")
+
 	return client
 }
 

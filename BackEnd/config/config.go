@@ -156,7 +156,7 @@ var Limit = TooBooth()
 
 // RabBitMQEngine 启动消息队列
 // 单机用个der MQ
-var RabBitMQEngine = RabBitMQ()
+// var RabBitMQEngine = RabBitMQ()
 
 // Init 初始化配置文件内容
 func Init() StructConfig {

@@ -2,24 +2,19 @@ package user
 
 import "BackEnd/config"
 
-// CommentCreate 创建评论数据
-type CommentCreate struct {
-	ArticleUID string `json:"ArticleUID"` // 文章uid
-	Type       bool   `json:"Type"`       // 插入评论，true是一级评论。false是二级评论
-	CommentUID string `json:"CommentUID"` // 倘若是二级评论请加上一级评论UID，倘若是一级评论则为空
-	AuthorName string `json:"AuthorName"` // 评论者昵称
-	AuthorIMG  string `json:"AuthorIMG"`  // 评论着头像
-	Text       string `json:"Text"`       // 评论内容
-}
-
 // CommentRead 读取评论数据内容
 type CommentRead struct {
-	UID               string `json:"UID"`               // 文章uid
-	Number            int    `json:"Number"`            // 分页数据，1则是1-10，2则是11-20--谁用接口传范围谁是SB
-	Type              bool   `json:"Type"`              // 是一级还是二级
-	CommentUID        string `json:"CommentUID"`        // 是二级才会启用这个字段
-	ClassificationUID string `json:"ClassificationUID"` // 属于哪个论坛
+	UID               string `json:"UID" binding:"required"`               // 文章uid
+	Number            int    `json:"Number" `                              // 分页数据，1则是1-10，2则是11-20--谁用接口传范围谁是SB
+	Type              bool   `json:"Type" `                                // 是一级还是二级
+	CommentUID        string `json:"CommentUID"`                           // 是二级才会启用这个字段
+	ClassificationUID string `json:"ClassificationUID" binding:"required"` // 属于哪个论坛
 }
+
+// // CommentCreate 创建评论数据
+// type CommentCreate struct {
+//
+// }
 
 type UploadImg struct {
 }

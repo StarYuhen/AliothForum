@@ -28,8 +28,6 @@ body {
 }
 
 
-
-
 .recomName {
     position: relative;
     margin-left: 1rem;
@@ -43,20 +41,29 @@ body {
     opacity: 0.8;
 }
 
-.comment-avatar{
+.comment-avatar {
     box-shadow: 2px 2px 3px #e1e1e1;
 
 }
-.comment{
-    padding-top: 10px;
-    border-bottom:1px solid #e8e8e8;
+
+.comment {
+    border-bottom: 1px solid #e8e8e8;
 }
-.comment-name{
+
+.comment-name {
     margin-left: 50px;
 }
-.van-divider{
+
+.van-divider {
     margin: unset;
 }
-.comment-content{
+
+.comment-content {
     padding: 2px 0 20px 50px;
+}
+
+#CommentHtml img {
+    /*重定义img标签自适应*/
+    max-height: 100%;
+    max-width: 100%;
 }

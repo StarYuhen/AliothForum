@@ -26,6 +26,7 @@ type ArticleRedis struct {
 	AuthorUID         string `json:"AuthorUID"`         // 作者UID
 	ViewPermissions   bool   `json:"ViewPermissions"`   // 是否需要登录查看
 	ClassificationUID string `json:"ClassificationUID"` // 贴吧的UID
+	Img               string `json:"Img"`               // 图片第一个地址
 }
 
 // ArticleElasticsearch 定义储存在elasticsearch 索引的文章储存内容

@@ -47,7 +47,7 @@
       @load="onLoad"
   >
     <!--    评论列表-->
-    <div class="comment" v-for="comment in Config.CommentList" v-bind:key="comment" @click="Config.Comment=true">
+    <div class="comment" v-for="comment in Config.CommentList" v-bind:key="comment">
       <van-cell-group inset>
         <div class="flex-shrink-0">
           <el-avatar class="comment-avatar float-left  w-12 " :src="comment.AuthImg" :lazy="true"/>
@@ -59,9 +59,8 @@
             {{ comment.CreatedAt.split("T")[0] }}
           </text>
         </div>
-        <van-cell class="comment-content text-base ">{{ comment.CommentText }}</van-cell>
+        <div id="CommentHtml" class="comment-content text-base " v-html="comment.CommentText "></div>
       </van-cell-group>
-      <van-divider/>
     </div>
 
   </van-list>
@@ -76,6 +75,8 @@
     <ArticleAndComment :Type=false
                        :AuthorUID=this.ArticleContent.ArticleData.AuthorUID
                        :ClassificationUID=this.ArticleContent.ArticleData.ClassificationUID
+                       :CommentType=this.Config.CommentType
+                       :CommentUID=this.Config.CommentUID
     ></ArticleAndComment>
   </van-popup>
   <van-popup v-model:show="Config.QRCodeBool">
@@ -87,15 +88,13 @@
 <script>
 import TouristApi from "@/assets/js/RouterTourist";
 import UserApi from "@/assets/js/RouterUser";
-import OptionListShare from "@/components/Moblie/OptionListShare";
-import ArticleAndComment from "@/components/Moblie/ArticleAndComment";
 
 const onClickLeft = () => history.back();
 export default {
   name: "ArticleMoblie",
   components: {
-    OptionListShare,
-    ArticleAndComment,
+    OptionListShare: () => import("./OptionListShare"),
+    ArticleAndComment: () => import("./ArticleAndComment"),
   },
   data() {
     return {
@@ -105,6 +104,9 @@ export default {
         QRCodeBool: false,
         QRCode: "",
         CommentText: "",
+        CommentType: true,
+        // 文章评论UID
+        CommentUID: "",
         OptionListShare: [[
           {name: '微信', icon: 'wechat'},
           {name: '朋友圈', icon: 'wechat-moments'},

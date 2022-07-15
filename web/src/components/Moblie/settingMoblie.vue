@@ -95,11 +95,12 @@ import {Dialog, Toast} from "vant";
 import UserApi from "@/assets/js/RouterUser";
 import TouristApi from "@/assets/js/RouterTourist";
 import {ref} from "vue";
-import OptionListShare from "@/components/Moblie/OptionListShare";
 
 export default {
   name: "settingMoblie",
-  components: {OptionListShare},
+  components: {
+    OptionListShare: () => import("./OptionListShare")
+  },
   setup() {
     const MailTime = ref(60 * 1000);
     return {MailTime}

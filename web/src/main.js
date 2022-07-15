@@ -12,7 +12,7 @@ import 'element-plus/dist/index.css'
 // // 绑定md解析库 这个库暂时不支持vue3
 // import MavonEditor from 'mavon-editor'
 // import 'mavon-editor/dist/css/index.css'
-import "vditor/src/assets/less/index.less"
+// import "vditor/src/assets/less/index.less"
 // 自定义css文件
 import "./assets/css/index.css"
 

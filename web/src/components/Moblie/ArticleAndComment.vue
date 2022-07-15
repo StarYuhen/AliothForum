@@ -9,7 +9,7 @@
   <van-button style="margin-top: 10px" type="primary" size="large"
               @click="this.Config.Type?
               PostArticle(this.CreateArticle,this.CommentContent):
-              PostArticle(this.CreateArticle,this.CommentContent)">
+              CreateComment(this.CreateArticle,this.CommentContent)">
     提交内容
   </van-button>
 </template>
@@ -25,7 +25,7 @@ import MajorApi from "@/assets/js/RouterMajor";
 export default {
   name: "ArticleAndComment",
   // true 代表着是文章(帖子),false 代表评论
-  props: ['Type', 'AuthorUID', 'ClassificationUID'],
+  props: ['Type', 'AuthorUID', 'ClassificationUID', 'CommentType', 'CommentUID'],
   data() {
     return {
       Config: {
@@ -33,6 +33,7 @@ export default {
         UploadFile: "http://localhost:47/api/user/ArticleUploadFile",
       },
       CreateArticle: {
+        ID: "",
         Title: "",
         Img: localStorage.ArticleImg,
         AuthorUID: "",
@@ -41,6 +42,8 @@ export default {
         Content: "",
         Keywords: "",
         comment: "",
+        CommentType: "",
+        CommentUID: "",
       },
       CommentContent: new Vditor('vditor'),
       Title: "",
@@ -49,11 +52,14 @@ export default {
   mounted() {
     this.CreateArticle.AuthorUID = this.AuthorUID
     this.CreateArticle.ClassificationUID = this.ClassificationUID
+    this.CreateArticle.CommentType = this.CommentType
+    this.CreateArticle.CommentUID = this.CommentUID
     console.log("请求的值", this.CreateArticle)
-    let id = this.$route.path.split("/")[2]
+    this.CreateArticle.ID = this.$route.path.split("/")[2]
+    let id = this.CreateArticle.ID
     // vditor编辑器配置内容
     this.CommentContent = new Vditor('vditor', {
-      height: 540,
+      height: 600,
       mode: "wysiwyg", // 所见即所得
       toolbarConfig: {
         pin: true,
@@ -92,6 +98,7 @@ export default {
 
   },
   methods: {
+    // 创建文章
     PostArticle: (CreateArticle, CommentContent) => {
       if (CreateArticle.Title === "" || CreateArticle.Keywords === "") {
         Toast("参数不完全")
@@ -100,9 +107,23 @@ export default {
       CreateArticle.Content = CommentContent.getValue()
       let data = MajorApi.insertArticle(CreateArticle)
       if (data.code === 200) {
-        console.log("")
+        console.log(data)
       }
+    },
+    // 创建评论
+    CreateComment: (CreateArticle, CommentContent) => {
+      let comment = {
+        "ArticleUID": CreateArticle.ID,
+        "ClassificationUID": CreateArticle.ClassificationUID,
+        "Type": CreateArticle.CommentType,
+        "CommentUID": CreateArticle.CommentUID,
+        "Text": CommentContent.getValue()
+      }
+      let data = MajorApi.insertComment(comment)
+      console.log(data)
+
     }
+
   }
 }
 </script>

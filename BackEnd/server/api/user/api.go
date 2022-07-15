@@ -10,7 +10,6 @@ import (
 	"github.com/sirupsen/logrus"
 	"github.com/skip2/go-qrcode"
 	"net/http"
-	"os"
 )
 
 // UploadImgUser 修改用户头像
@@ -34,22 +33,21 @@ func UploadImgUser(ctx *gin.Context) {
 	FilePathNew := uuid.NewString() + suffix
 	// 设置本机oss路径
 	ossPath := config.StoreConfig.WebFile.UploadImg + FilePathNew
-	// 保存文件
-	err = ctx.SaveUploadedFile(file, "./"+ossPath)
-
-	if err != nil {
-		logrus.Error("保存文件错误--->", err)
-		ctx.JSON(http.StatusOK, expen.InternalErrorFun("保存文件错误"))
-		return
-	}
-	dir, _ := os.Getwd()
+	// // 保存文件
+	// err = ctx.SaveUploadedFile(file, "./"+ossPath)
+	//
+	// if err != nil {
+	// 	logrus.Error("保存文件错误--->", err)
+	// 	ctx.JSON(http.StatusOK, expen.InternalErrorFun("保存文件错误"))
+	// 	return
+	// }
 	// 上传到oss
 	var tx = new(expen.TxOssBuckets)
 	tx.FileReader = FilePathNew
 	tx.FilePathClient = ossPath
-	tx.FilePathBackEnd = dir + "/" + ossPath
-	if !tx.TxUploadBuckets() {
-		logrus.Error("文件上传oss失败")
+	tx.FilePathBackEnd, _ = file.Open()
+
+	if tx.TxUploadBuckets() {
 		ctx.JSON(http.StatusOK, expen.InternalErrorFun("上传oss错误"))
 		return
 	}
@@ -115,11 +113,6 @@ func UrlQrCode(ctx *gin.Context) {
 
 }
 
-// InsertComment 插入文章评论
-func InsertComment(ctx *gin.Context) {
-
-}
-
 // ReadComment 读取文章评论
 func ReadComment(ctx *gin.Context) {
 	var PostComment CommentRead
@@ -166,7 +159,7 @@ func ArticleUploadFile(ctx *gin.Context) {
 	}
 	logrus.Info("传输的文件名字--->", file.Filename)
 	suffix := PathText(file.Filename)
-	if FileType(suffix) {
+	if !FileType(suffix) {
 		logrus.Error("传输文件名字不对--->", err)
 		ctx.JSON(http.StatusOK, expen.MissingParametersFun("传输文件后缀名错误"))
 		return
@@ -175,32 +168,27 @@ func ArticleUploadFile(ctx *gin.Context) {
 	FilePathNew := uuid.NewString() + suffix
 	// 设置本机oss路径
 	ossPath := config.StoreConfig.WebFile.UploadFile + FilePathNew
-	// 保存文件
-	err = ctx.SaveUploadedFile(file, "./"+ossPath)
-
-	if err != nil {
-		logrus.Error("保存文件错误--->", err)
-		ctx.JSON(http.StatusOK, expen.InternalErrorFun("保存文件错误"))
-		return
-	}
-	dir, _ := os.Getwd()
+	// // 保存文件
+	// err = ctx.SaveUploadedFile(file, "./"+ossPath)
+	//
+	// if err != nil {
+	// 	logrus.Error("保存文件错误--->", err)
+	// 	ctx.JSON(http.StatusOK, expen.InternalErrorFun("保存文件错误"))
+	// 	return
+	// }
 	// 上传到oss
 	var tx = new(expen.TxOssBuckets)
 	tx.FileReader = FilePathNew
 	tx.FilePathClient = ossPath
-	tx.FilePathBackEnd = dir + "/" + ossPath
-	if !tx.TxUploadBuckets() {
-		logrus.Error("文件上传oss失败")
-		config.Pool.Submit(func() {
-			os.Remove(tx.FilePathBackEnd)
-		})
+	tx.FilePathBackEnd, _ = file.Open()
+	// 进行延时关闭
+	defer tx.FilePathBackEnd.Close()
+	if tx.TxUploadBuckets() {
+		logrus.Error("文件上传oss失败:", err)
 		ctx.JSON(http.StatusOK, expen.InternalErrorFun("上传oss错误"))
 		return
 	}
-	// 删除文件
-	config.Pool.Submit(func() {
-		os.Remove(tx.FilePathBackEnd)
-	})
 	img := config.StoreConfig.OSS.TxConfig.OSSUrl + "/" + ossPath
 	ctx.JSON(http.StatusOK, expen.Success(img, "上传文件成功"))
+	return
 }

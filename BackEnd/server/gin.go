@@ -69,11 +69,11 @@ func GinServer() {
 	router.TouristRouter(Tourist)
 	router.UserRouter(User)
 
-	// 绑定静态资源文件夹
+	// 绑定静态资源文件夹 --必须是登录用户才能访问
 	// 生成二维码储存地址
-	engine.Static("/QrCodeURL", config.StoreConfig.WebFile.QrCodeURL)
+	User.Static("/QrCodeURL", config.StoreConfig.WebFile.QrCodeURL)
 	// 文章Markdown文件储存地址
-	engine.Static("/MarkdownURL", config.StoreConfig.WebFile.MarkdownURL)
+	User.Static("/MarkdownURL", config.StoreConfig.WebFile.MarkdownURL)
 	// 绑定模板文件
 	engine.SetHTMLTemplate(template.Must(template.New("").ParseFS(tmpl, "tmpl/*.tmpl")))
 	// 请求文章内容--爬虫地图给予内容
