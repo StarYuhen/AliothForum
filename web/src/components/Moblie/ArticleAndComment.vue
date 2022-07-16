@@ -8,8 +8,8 @@
   <div style="margin-top: 10px" id="vditor"/>
   <van-button style="margin-top: 10px" type="primary" size="large"
               @click="this.Config.Type?
-              PostArticle(this.CreateArticle,this.CommentContent):
-              CreateComment(this.CreateArticle,this.CommentContent)">
+              PostArticle(this.CreateArticle,this.CommentContent,this.$emit):
+              CreateComment(this.CreateArticle,this.CommentContent,this.$emit)">
     提交内容
   </van-button>
 </template>
@@ -20,7 +20,6 @@ import Vditor from 'vditor'
 import "vditor/src/assets/less/index.less"
 import {Toast} from "vant";
 import MajorApi from "@/assets/js/RouterMajor";
-
 // 通过父组件传参进行判断是写的帖子（文章）还是评论
 export default {
   name: "ArticleAndComment",
@@ -99,7 +98,7 @@ export default {
   },
   methods: {
     // 创建文章
-    PostArticle: (CreateArticle, CommentContent) => {
+    PostArticle: (CreateArticle, CommentContent, emit) => {
       if (CreateArticle.Title === "" || CreateArticle.Keywords === "") {
         Toast("参数不完全")
         return
@@ -109,9 +108,12 @@ export default {
       if (data.code === 200) {
         console.log(data)
       }
+      // 清除本地缓存
+      localStorage.removeItem(CreateArticle.ID)
+      emit('FalseCommentPopup')
     },
     // 创建评论
-    CreateComment: (CreateArticle, CommentContent) => {
+    CreateComment: (CreateArticle, CommentContent, emit) => {
       let comment = {
         "ArticleUID": CreateArticle.ID,
         "ClassificationUID": CreateArticle.ClassificationUID,
@@ -121,7 +123,9 @@ export default {
       }
       let data = MajorApi.insertComment(comment)
       console.log(data)
-
+      localStorage.removeItem(CreateArticle.ID)
+      // 评论肯定是在文章里面的，所以传递过去
+      emit('FalseCommentPopup')
     }
 
   }

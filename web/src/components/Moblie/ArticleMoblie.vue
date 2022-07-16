@@ -77,6 +77,7 @@
                        :ClassificationUID=this.ArticleContent.ArticleData.ClassificationUID
                        :CommentType=this.Config.CommentType
                        :CommentUID=this.Config.CommentUID
+                       @FalseCommentPopup="FalseCommentPopup(this.Config)"
     ></ArticleAndComment>
   </van-popup>
   <van-popup v-model:show="Config.QRCodeBool">
@@ -159,6 +160,9 @@ export default {
     }
   },
   async mounted() {
+    // 先关闭底部的导航栏
+    console.log(this.$refs.TabBar)
+
     console.log(this.$route.path)
     let id = this.$route.path.split("/")[2]
     this.ArticleContent = await TouristApi.GetArticleContent(id)
@@ -172,7 +176,12 @@ export default {
     }
     this.Config.CommentList = await UserApi.PostCommentOne(Comment)
   },
-  methods: {}
+  methods: {
+    // 子组件传递的值更改父组件
+    FalseCommentPopup: (config) => {
+      config.Comment = false
+    }
+  }
 
 }
 </script>

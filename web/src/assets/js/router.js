@@ -1,7 +1,6 @@
 import {createRouter, createWebHistory} from 'vue-router'
 
 
-
 /*
    path: "/", component: () => {
         return import(RecomMend)

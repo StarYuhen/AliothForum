@@ -18,3 +18,8 @@ func ForumIMGAndName(uid string) ForumList {
 	config.MysqlURL.Table("forum_list").Select("Name", "ImgUrl").Where("uid", uid).First(&f)
 	return f
 }
+
+// ForumListCrete 新建论坛信息
+func (f *ForumList) ForumListCrete() error {
+	return config.MysqlURL.Table("forum_list").Create(&f).Error
+}
