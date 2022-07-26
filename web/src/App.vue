@@ -20,6 +20,9 @@ export default {
       componentIs: 'APPMoblie'
     };
   },
+  mounted() {
+  },
+  methods: {}
 }
 </script>
 

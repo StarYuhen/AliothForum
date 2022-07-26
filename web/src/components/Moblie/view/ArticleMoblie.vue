@@ -29,7 +29,7 @@
   <div v-html="ArticleContent.Article.Content" class="markdown-body rounded-md pl-3 pr-3 pb-3 pt-3 shadow "></div>
   <!--  点赞，分享，收藏，评论-->
   <van-grid :clickable=true icon-size="22px">
-    <van-grid-item icon="like-o" text="点赞"/>
+    <van-grid-item icon="like-o" text="点赞" @click="ArticleLikeUID(this.ArticleContent.ID)"/>
     <van-grid-item icon="chat-o" text="评论" @click="Config.Comment=true"/>
     <van-grid-item icon="star-o" text="收藏"/>
     <van-grid-item icon="share-o" text="分享" @click="Config.ShareList=true"/>
@@ -44,7 +44,7 @@
       v-model:loading="loading"
       :finished="finished"
       finished-text="没有更多了"
-      @load="onLoad"
+      @load="ArticleComment(this.CommentListPost,this.Config.CommentList)"
   >
     <!--    评论列表-->
     <div class="comment" v-for="comment in Config.CommentList" v-bind:key="comment">
@@ -89,6 +89,7 @@
 <script>
 import TouristApi from "@/assets/js/RouterTourist";
 import UserApi from "@/assets/js/RouterUser";
+import {Toast} from "vant";
 
 const onClickLeft = () => history.back();
 export default {
@@ -155,6 +156,7 @@ export default {
           Keywords: ""
         }
       },
+      CommentListPost: {},
       CommentContent: "",
       onClickLeft
     }
@@ -175,11 +177,24 @@ export default {
       ClassificationUID: this.ArticleContent.ArticleData.ClassificationUID
     }
     this.Config.CommentList = await UserApi.PostCommentOne(Comment)
+    this.CommentListPost = Comment
   },
   methods: {
     // 子组件传递的值更改父组件
     FalseCommentPopup: (config) => {
       config.Comment = false
+    },
+    // 文章点赞
+    ArticleLikeUID: async (uid) => {
+      let data = await UserApi.ArticleLike(uid)
+      Toast(data.msg)
+    },
+    // 请求文章评论
+    ArticleComment: async (comment, list) => {
+      console.log("触发了评论更新")
+      comment.Number++
+      let data = await UserApi.PostCommentOne(comment)
+      list.push(...data)
     }
   }
 

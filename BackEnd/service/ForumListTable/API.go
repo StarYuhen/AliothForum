@@ -23,3 +23,13 @@ func ForumIMGAndName(uid string) ForumList {
 func (f *ForumList) ForumListCrete() error {
 	return config.MysqlURL.Table("forum_list").Create(&f).Error
 }
+
+// RandomRecommend 随机推荐论坛-8个
+func RandomRecommend() ([]ForumList, error) {
+	var f []ForumList
+	err := config.MysqlURL.Table("forum_list").
+		Select("id", "Name", "ImgUrl", "Src").Where("id>=(?)",
+		config.MysqlURL.Table("forum_list ").Select("FLOOR( MAX(id) * RAND())")).Limit(8).
+		Find(&f).Error
+	return f, err
+}

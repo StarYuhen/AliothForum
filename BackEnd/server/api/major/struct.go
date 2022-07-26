@@ -21,3 +21,10 @@ type CommentCreate struct {
 	AuthorIMG         string `json:"AuthorIMG" binding:"required"`         // 评论着头像
 	Text              string `json:"Text" binding:"required"`              // 评论内容
 }
+
+// CreateForumPost 创建论坛请求数据
+type CreateForumPost struct {
+	Name   string `json:"Name" binding:"required"`
+	Src    string `json:"Src" binding:"required"`
+	ImgURL string `json:"ImgURL" binding:"required"`
+}

@@ -3,6 +3,7 @@ package config
 import (
 	_ "embed"
 	"github.com/88250/lute"
+	"github.com/chenyahui/gin-cache/persist"
 	"github.com/sirupsen/logrus"
 	"gopkg.in/gomail.v2"
 	"gopkg.in/yaml.v2"
@@ -153,6 +154,9 @@ var ElasticsearchEngine = ElasticsearchClient()
 
 // Limit 初始化速率限制器
 var Limit = TooBooth()
+
+// CacheAPI 设置api的接口缓存redis
+var CacheAPI = persist.NewRedisStore(RedisWebExpen)
 
 // RabBitMQEngine 启动消息队列
 // 单机用个der MQ

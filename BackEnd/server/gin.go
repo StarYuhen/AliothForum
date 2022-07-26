@@ -6,6 +6,7 @@ import (
 	"BackEnd/server/router"
 	"BackEnd/server/use"
 	"embed"
+	cache "github.com/chenyahui/gin-cache"
 	"github.com/danielkov/gin-helmet"
 	"github.com/dvwright/xss-mw"
 	"github.com/gin-contrib/gzip"
@@ -14,6 +15,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
 	"html/template"
+	"time"
 )
 
 //go:embed tmpl/*
@@ -22,6 +24,8 @@ var tmpl embed.FS
 // GinServer 启动gin服务框架
 func GinServer() {
 	engine := gin.Default()
+	// 绑定模板文件
+	engine.SetHTMLTemplate(template.Must(template.New("").ParseFS(tmpl, "tmpl/*.tmpl")))
 	engineCookie := cookie.NewStore([]byte("Yuhenm.com_StarYuhen"))
 	var xssM xss.XssMw
 	// 注册中间件
@@ -74,10 +78,8 @@ func GinServer() {
 	User.Static("/QrCodeURL", config.StoreConfig.WebFile.QrCodeURL)
 	// 文章Markdown文件储存地址
 	User.Static("/MarkdownURL", config.StoreConfig.WebFile.MarkdownURL)
-	// 绑定模板文件
-	engine.SetHTMLTemplate(template.Must(template.New("").ParseFS(tmpl, "tmpl/*.tmpl")))
-	// 请求文章内容--爬虫地图给予内容
-	engine.GET("/archives/:ID", tourist.GetArticleContentReptile)
+	// 请求文章内容--爬虫地图给予内容 设置接口缓存时间为一周
+	engine.GET("/archives/:ID", cache.CacheByRequestURI(config.CacheAPI, 84*time.Hour), tourist.GetArticleContentReptile)
 
 	// 正式生产项目使用RunTLS实现绑定接口https
 

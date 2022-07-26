@@ -5,11 +5,16 @@ import (
 	"BackEnd/expen"
 	"BackEnd/server/api/function"
 	"BackEnd/server/use"
+	"BackEnd/service"
+	"BackEnd/service/ForumListTable"
 	"BackEnd/service/UserAccountTable"
+	"encoding/json"
 	"github.com/gin-gonic/gin"
+	"github.com/mitchellh/mapstructure"
 	"github.com/sirupsen/logrus"
 	"html/template"
 	"net/http"
+	"strconv"
 	"strings"
 	"time"
 )
@@ -177,4 +182,48 @@ func GetArticleContent(ctx *gin.Context) {
 	// 读取成功后默认增加浏览量
 	Article.AddPageViews(ctx.ClientIP())
 	ctx.JSON(http.StatusOK, expen.Success(Article, "欢迎查看文章"))
+}
+
+// RandomRecommendForum 随机获取推荐论坛
+func RandomRecommendForum(ctx *gin.Context) {
+	list, err := ForumListTable.RandomRecommend()
+	if err != nil {
+		logrus.Error("获取随机推荐论坛失败:", err)
+		ctx.JSON(http.StatusOK, expen.InternalErrorFun("获取随机推荐论坛失败"))
+		return
+	}
+	ctx.JSON(http.StatusOK, expen.Success(list, strconv.Itoa(len(list))))
+}
+
+// ArticleRandomIO 获取随机推荐文章
+func ArticleRandomIO(ctx *gin.Context) {
+	// 从redis读取文章ID，然后查询数据并行获取结果
+	List := make([]struct {
+		All     *function.ArticleRedis `json:"All"`
+		Article *service.Table         `json:"Article"`
+	}, 7)
+	for i := 0; i <= 6; i++ {
+		id := expen.HashRandomKey(config.RedisArticle)
+		// 通过key查找value
+		str := expen.HashReadAll(config.RedisArticle, id)
+		// 直接遍历到redis 结构体内容去
+		all := new(function.ArticleRedis)
+		sql := new(service.Table)
+		if err := mapstructure.WeakDecode(str, all); err != nil {
+			logrus.Error("转换Redis中的文章数据失败:", err)
+			continue
+		} else {
+			// 再转换一边json
+			if err := json.Unmarshal([]byte(all.Mysql), sql); err != nil {
+				logrus.Error("转换json中的文章数据失败:", err)
+				continue
+			}
+			List[i].Article = sql
+			List[i].All = all
+		}
+
+	}
+	// 直接返回结果
+	ctx.JSON(http.StatusOK, expen.Success(List, "请求首页随机文章成功"))
+
 }

@@ -2,7 +2,6 @@ package use
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/sirupsen/logrus"
 	"strings"
 )
 
@@ -29,7 +28,7 @@ func ReptileBool() gin.HandlerFunc {
 func DetectionCrawler() gin.HandlerFunc {
 	return func(context *gin.Context) {
 		context.Set("Reptile", strings.Contains(context.GetHeader("User-Agent"), "compatible;"))
-		logrus.Info("当前设备UA:", context.GetHeader("User-Agent"))
+		// logrus.Info("当前设备UA:", context.GetHeader("User-Agent"))
 		context.Next()
 	}
 }

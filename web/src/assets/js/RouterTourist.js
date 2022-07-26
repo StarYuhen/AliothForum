@@ -59,11 +59,29 @@ const TouristApi = {
         let data
         await server.get("/api/tourist/article/" + id).then(function (response) {
             data = response.data.data
-            console.log("文章返回的内容：",data)
+            console.log("文章返回的内容：", data)
             data.Article.Content = marked(data.Article.Content)
         })
         return data
     },
+    // 获取随机推荐论坛
+    GetRandomRecommendForum: async () => {
+        let data
+        await server.get("/api/tourist/RandomRecommendForum").then(function (response) {
+            data = response.data
+            console.log("随机论坛返回的内容：", data)
+        })
+        return data
+    },
+    // 获取随机首页文章
+    GetRandomIndexArticle: async () => {
+        let data
+        await server.get("/api/tourist/ArticleIndex").then(function (response) {
+            data = response.data
+            console.log("随机论坛返回的内容：", data)
+        })
+        return data
+    }
 }
 
 export default TouristApi

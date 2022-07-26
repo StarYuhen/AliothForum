@@ -6,6 +6,8 @@ import (
 	"BackEnd/service"
 	"BackEnd/service/ForumListTable"
 	"BackEnd/service/UserAccountTable"
+	"context"
+	"encoding/json"
 	"github.com/mitchellh/mapstructure"
 	"github.com/sirupsen/logrus"
 	"time"
@@ -27,6 +29,7 @@ type ArticleRedis struct {
 	ViewPermissions   bool   `json:"ViewPermissions"`   // 是否需要登录查看
 	ClassificationUID string `json:"ClassificationUID"` // 贴吧的UID
 	Img               string `json:"Img"`               // 图片第一个地址
+	Mysql             string `json:"ArticleSQL"`        // 储存的sql内容
 }
 
 // ArticleElasticsearch 定义储存在elasticsearch 索引的文章储存内容
@@ -75,13 +78,14 @@ func (Article *ArticleContent) GetVal() error {
 
 // ElasticsearchGet  获取elasticsearch 的索引内容
 func (Article *ArticleContent) ElasticsearchGet() error {
+	// 改为全部储存在article里面
 	return expen.ElasticsearchGet(Article.ArticleData.ClassificationUID, Article.ID, &Article.Article)
 }
 
 // InsertRedis 将杂项数据插入redis
 func (Article *ArticleContent) InsertRedis() error {
 	// 改为批量插入
-	if _, err := config.RedisArticle.HMSet(Article.ID, map[string]interface{}{
+	if _, err := config.RedisArticle.HMSet(context.Background(), Article.ID, map[string]interface{}{
 		"Title":             Article.ArticleData.Title,
 		"PageViews":         Article.ArticleData.PageViews,
 		"Likes":             Article.ArticleData.Likes,
@@ -97,6 +101,7 @@ func (Article *ArticleContent) InsertRedis() error {
 
 // InsertArticle  将文章内容插入elasticsearch中
 func (Article *ArticleContent) InsertArticle() error {
+	// 改为全部储存在article里面
 	return expen.ElasticsearchInsert(Article.ArticleData.ClassificationUID, Article.ID, Article.Article)
 }
 
@@ -176,6 +181,11 @@ func (Article *ArticleContent) MysqlArticle() error {
 	table.Content = expen.StringsP(config.LuteEngine.MarkdownStr(Article.ArticleData.Title, Article.Article.Content))
 	table.AuthImg = Article.Article.AuthorIMG
 	table.Img = Article.Article.Img
+	// 同时插入redis时间戳
+	res, _ := json.Marshal(table)
+	if err := expen.HaseSet(config.RedisArticle, Article.ID, "Mysql", res); err != nil {
+		return err
+	}
 	return service.CreateArticleContent(table, Article.ArticleData.ClassificationUID)
 }
 

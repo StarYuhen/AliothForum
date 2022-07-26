@@ -38,6 +38,16 @@ const UserApi = {
         }).then(function (response) {
             data = response.data.data
         })
+        console.log(data)
+        return data
+    },
+    // 文章点赞接口
+    ArticleLike: async (uid) => {
+        let data
+        await server.get("/api/user/ArticleLike?article=" + uid).then(function (response) {
+            console.log(response.data)
+            data = response.data
+        })
         return data
     }
 }

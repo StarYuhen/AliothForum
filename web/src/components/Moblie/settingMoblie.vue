@@ -99,7 +99,7 @@ import {ref} from "vue";
 export default {
   name: "settingMoblie",
   components: {
-    OptionListShare: () => import("./OptionListShare")
+    OptionListShare: () => import("./view/OptionListShare")
   },
   setup() {
     const MailTime = ref(60 * 1000);

@@ -21,5 +21,6 @@ func UserRouter(engine *gin.RouterGroup) {
 	engine.GET("/AddLike", user.ClickLike)
 	// 上传文件，用于贴子，评论，文章
 	engine.POST("/ArticleUploadFile", user.ArticleUploadFile)
-
+	// 文章点赞
+	engine.GET("/ArticleLike", user.ArticleLike)
 }

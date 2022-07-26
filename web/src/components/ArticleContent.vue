@@ -6,7 +6,7 @@
 
 <script>
 import ArticlePC from "@/components/PC/ArticlePC";
-import ArticleMoblie from "@/components/Moblie/ArticleMoblie";
+import ArticleMoblie from "@/components/Moblie/view/ArticleMoblie";
 
 export default {
   name: "ArticleContent",

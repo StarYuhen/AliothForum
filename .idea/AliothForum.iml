@@ -9,7 +9,6 @@
       <excludeFolder url="file://$MODULE_DIR$/WebNuxt/.idea" />
       <excludeFolder url="file://$MODULE_DIR$/Docx" />
       <excludeFolder url="file://$MODULE_DIR$/BackEnd/WebFile/upload/file" />
-      <excludeFolder url="file://$MODULE_DIR$/BackEnd/test" />
       <excludeFolder url="file://$MODULE_DIR$/BackEnd/WebFile" />
     </content>
     <orderEntry type="inheritedJdk" />

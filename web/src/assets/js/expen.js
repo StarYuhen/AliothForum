@@ -10,6 +10,11 @@ const Expen = {
         localStorage.jwt = data.Jwt
         localStorage.name = data.Name
         localStorage.img = data.ImgUrl
+    },
+    // 判断是否是移动端
+    IsMobile: () => {
+        return navigator.userAgent.match(/iPhone|iPad|iPod/gi) ||
+            navigator.userAgent.match(/Android|BlackBerry|Opera Mini|IEMobile/gi)
     }
 }
 export default Expen

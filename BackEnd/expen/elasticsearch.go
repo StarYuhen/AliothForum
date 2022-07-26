@@ -4,6 +4,7 @@ import (
 	"BackEnd/config"
 	"context"
 	"encoding/json"
+	"github.com/olivere/elastic/v7"
 	"github.com/sirupsen/logrus"
 )
 
@@ -21,7 +22,7 @@ func ElasticsearchInsert(index, ID string, Json interface{}) error {
 	return nil
 }
 
-// ElasticsearchGet 用于读取储存的内容
+// ElasticsearchGet 使用ID和分类UID读取储存的内容
 func ElasticsearchGet(index, ID string, Json interface{}) error {
 	ctx := context.Background()
 	get, err := config.ElasticsearchEngine.Get().
@@ -42,4 +43,22 @@ func ElasticsearchGet(index, ID string, Json interface{}) error {
 	}
 
 	return nil
+}
+
+// ElasticsearchGetArticleRandom  用于文章随机推荐
+func ElasticsearchGetArticleRandom() (*elastic.SearchResult, error) {
+	ctx := context.Background()
+	// 初始化查询--随机获取结果 随机10个
+	// script := elastic.NewScript("Math.random()")
+	get, err := config.ElasticsearchEngine.Search("article").
+		Size(2).
+		// 返回json格式内容
+		Pretty(true).
+		Do(ctx)
+
+	if err != nil {
+		logrus.Error("查询随机文章错误:", err)
+		return nil, err
+	}
+	return get, err
 }

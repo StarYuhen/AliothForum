@@ -9,14 +9,14 @@ import (
 
 // Table 通用文章储存表结构
 type Table struct {
-	ID         uint   `gorm:"primaryKey;autoIncrement"` // 主键且自增
-	Uid        string // 创建文章时生成的时间戳ID
-	Title      string // 文章标题
-	Content    string // 文章内容 最多50个字
-	AuthorName string // 作者昵称
-	AuthImg    string // 作者头像
-	Img        string // 图片，当文章有图片时默认展示第一张图片
-	gorm.Model
+	ID         uint   `gorm:"primaryKey;autoIncrement" json:"ID,omitempty"` // 主键且自增
+	Uid        string `json:"Uid,omitempty"`                                // 创建文章时生成的时间戳ID
+	Title      string `json:"Title,omitempty"`                              // 文章标题
+	Content    string `json:"Content,omitempty"`                            // 文章内容 最多50个字
+	AuthorName string `json:"AuthorName,omitempty"`                         // 作者昵称
+	AuthImg    string `json:"AuthImg,omitempty"`                            // 作者头像
+	Img        string `json:"Img,omitempty"`                                // 图片，当文章有图片时默认展示第一张图片
+	gorm.Model `json:"Gorm.Model"`
 }
 
 // Comment 文章评论表--设计繁琐

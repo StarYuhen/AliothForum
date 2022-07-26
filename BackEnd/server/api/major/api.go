@@ -5,6 +5,7 @@ import (
 	"BackEnd/expen"
 	"BackEnd/server/api/function"
 	"BackEnd/service"
+	"BackEnd/service/ForumListTable"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 	"github.com/sirupsen/logrus"
@@ -74,5 +75,32 @@ func InsertComment(ctx *gin.Context) {
 // CreateClassification 新建论坛--论坛用于储存论坛表
 func CreateClassification(ctx *gin.Context) {
 	// 创建论坛后依次创建论坛文章表和论坛评论表
+	uid, _ := ctx.Get("uid")
+	var f ForumListTable.ForumList
+	var forum CreateForumPost
+	if err := ctx.BindJSON(&forum); err != nil {
+		logrus.Error("绑定JSON元素失败:", err)
+		ctx.JSON(http.StatusOK, expen.ParameterErrorFun("请求数据错误，稍后再试"))
+		return
+	}
+	// if len(forum.Name) > 18 {
+	// 	logrus.Error("创建的论坛名大于6个字符")
+	// 	ctx.JSON(http.StatusOK, expen.ParameterErrorFun("创建论坛错误，论坛名大于6个汉字"))
+	// 	return
+	// }
+	// 创建
+	f.UID = uuid.NewString()
+	f.ImgURL = forum.ImgURL
+	f.CreateUID = uid.(string)
+	f.Name = forum.Name
+	f.Src = forum.Src
+
+	if err := f.ForumListCrete(); err != nil {
+		logrus.Error("创建论坛错误：", err)
+		ctx.JSON(http.StatusOK, expen.ParameterErrorFun("创建论坛错误,请稍后再试"))
+		return
+	}
+
+	ctx.JSON(http.StatusOK, expen.Success(nil, "创建论坛成功"))
 
 }

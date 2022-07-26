@@ -10,6 +10,7 @@ import (
 	"github.com/sirupsen/logrus"
 	"github.com/skip2/go-qrcode"
 	"net/http"
+	"time"
 )
 
 // UploadImgUser 修改用户头像
@@ -125,10 +126,10 @@ func ReadComment(ctx *gin.Context) {
 	// 使用分页器获取内容
 	if PostComment.Number == 1 {
 		index = 0
-		max = 10
+		max = 6
 	} else {
-		index = (PostComment.Number-1)*10 + 1
-		max = PostComment.Number * 10
+		index = (PostComment.Number-1)*6 + 1
+		max = PostComment.Number * 6
 	}
 	logrus.Info("绑定的值：", PostComment)
 	list, _ := service.PaginationCommentOne(index, max, PostComment.UID, PostComment.ClassificationUID+"_comment")
@@ -192,3 +193,24 @@ func ArticleUploadFile(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, expen.Success(img, "上传文件成功"))
 	return
 }
+
+// ArticleLike 文章点赞
+func ArticleLike(ctx *gin.Context) {
+	// 判断redis是否有用户的点赞记录，有则提示点赞
+	UserUID, _ := ctx.Get("uid")
+	ArticleUID := ctx.Query("article")
+	if bo, _ := expen.HaseRead(config.RedisComment, ArticleUID, UserUID.(string)); bo {
+		//  为真说明已经点过赞了
+		ctx.JSON(http.StatusOK, expen.InternalErrorFun("您已经点过赞了"))
+		return
+	}
+
+	// 没有点过
+	expen.HaseSet(config.RedisComment, ArticleUID, UserUID.(string), time.Now())
+	expen.HashInsertAdd(config.RedisArticle, ArticleUID, "Likes")
+	ctx.JSON(http.StatusOK, expen.Success(nil, "点赞成功惹"))
+}
+
+// 收藏贴吧
+
+// 将收藏的贴吧显示出来

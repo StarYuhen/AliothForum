@@ -1,8 +1,10 @@
 <template>
   <van-nav-bar title="请输入内容"/>
   <van-cell-group inset>
-    <van-field v-model="CreateArticle.Title" placeholder="请输入文章标题" label="标题" v-if="this.Config.Type" required/>
-    <van-field v-model="CreateArticle.Keywords" placeholder="游戏,二次元,Cosplay(这样编写)" label="标签" v-if="this.Config.Type"
+    <van-field v-model="CreateArticle.Title" placeholder="请输入文章标题" label="标题" v-if="this.Config.Type"
+               required/>
+    <van-field v-model="CreateArticle.Keywords" placeholder="游戏,二次元,Cosplay(这样编写)" label="标签"
+               v-if="this.Config.Type"
                required/>
   </van-cell-group>
   <div style="margin-top: 10px" id="vditor"/>
@@ -28,6 +30,8 @@ export default {
   data() {
     return {
       Config: {
+        Index: 1,
+        Max: 10,
         Type: false,
         UploadFile: "http://localhost:47/api/user/ArticleUploadFile",
       },

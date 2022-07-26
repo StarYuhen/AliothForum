@@ -7,6 +7,7 @@
 <script>
 import settingPC from "@/components/PC/settingPC";
 import settingMoblie from "@/components/Moblie/settingMoblie";
+
 export default {
   name: "settingUI",
   components: {

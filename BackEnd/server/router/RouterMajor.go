@@ -10,4 +10,6 @@ func MajorRouter(engine *gin.RouterGroup) {
 	engine.POST("/insertArticle", major.InsertArticle)
 	// 创建评论评论
 	engine.POST("/InsertComment", major.InsertComment)
+	// 创建论坛
+	engine.POST("/CreateClassification", major.CreateClassification)
 }
