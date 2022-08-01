@@ -33,3 +33,10 @@ func RandomRecommend() ([]ForumList, error) {
 		Find(&f).Error
 	return f, err
 }
+
+// CollectedAll 获取所有已经关注了的论坛
+func CollectedAll(all []string) ([]ForumList, error) {
+	var f []ForumList
+	err := config.MysqlURL.Table("forum_list").Where("uid in ?", all).Find(&f).Error
+	return f, err
+}

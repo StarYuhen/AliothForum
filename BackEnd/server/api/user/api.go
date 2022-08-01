@@ -4,6 +4,7 @@ import (
 	"BackEnd/config"
 	"BackEnd/expen"
 	"BackEnd/service"
+	"BackEnd/service/ForumListTable"
 	"BackEnd/service/UserAccountTable"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
@@ -211,6 +212,34 @@ func ArticleLike(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, expen.Success(nil, "点赞成功惹"))
 }
 
-// 收藏贴吧
+// CollectTab 收藏贴吧
+func CollectTab(ctx *gin.Context) {
+	UserUID, _ := ctx.Get("uid")
+	TabUID := ctx.Query("tab")
+	if b, _ := expen.HaseRead(config.RedisWebExpen, UserUID.(string), TabUID); b {
+		ctx.JSON(http.StatusOK, expen.HttpToast(b, "您已经收藏了该贴吧"))
+		return
+	}
+	// 没有收藏则收藏
+	ctx.JSON(http.StatusOK,
+		expen.Success(expen.HaseSet(config.RedisWebExpen, UserUID.(string), TabUID, true),
+			"您已收藏成功"))
+}
 
-// 将收藏的贴吧显示出来
+// CollectedTab 已经收藏了的贴吧
+func CollectedTab(ctx *gin.Context) {
+	// 收藏了的贴吧放进redis中
+	UserUID, _ := ctx.Get("uid")
+	all := expen.HashReadAllKey(config.RedisWebExpen, UserUID.(string))
+	if len(all) == 0 {
+		ctx.JSON(http.StatusOK, expen.HttpToast(all, "您暂未收藏贴吧"))
+		return
+	}
+	// 通过redis返回的所有key查询数据库内的贴吧信息
+	f, err := ForumListTable.CollectedAll(all)
+	if err != nil {
+		ctx.JSON(http.StatusOK, expen.MissingParametersFun("获取收藏贴吧数据失败"))
+		return
+	}
+	ctx.JSON(http.StatusOK, expen.Success(f, "请求收藏贴吧成功"))
+}

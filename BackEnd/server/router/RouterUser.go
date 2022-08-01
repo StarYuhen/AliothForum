@@ -23,4 +23,8 @@ func UserRouter(engine *gin.RouterGroup) {
 	engine.POST("/ArticleUploadFile", user.ArticleUploadFile)
 	// 文章点赞
 	engine.GET("/ArticleLike", user.ArticleLike)
+	// 所有收藏的贴吧
+	engine.GET("/CollectedTab", user.CollectedTab)
+	// 收藏该贴吧
+	engine.GET("/CollectTab", user.CollectTab)
 }

@@ -49,6 +49,15 @@ const UserApi = {
             data = response.data
         })
         return data
+    },
+    // 已经收藏了的所有贴吧
+    CollectedTab: async () => {
+        let data
+        await server.get("/api/user/CollectedTab").then(function (response) {
+            console.log(response.data)
+            data = response.data
+        })
+        return data
     }
 }
 

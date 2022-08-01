@@ -58,6 +58,11 @@ func HashReadAll(client *redis.Client, key string) map[string]string {
 	return client.HGetAll(context.Background(), key).Val()
 }
 
+// HashReadAllKey 获取hash表的所有key
+func HashReadAllKey(client *redis.Client, key string) []string {
+	return client.HKeys(context.Background(), key).Val()
+}
+
 // HashInsertAdd 实现hash表的自增
 func HashInsertAdd(client *redis.Client, key string, find string) int64 {
 	return client.HIncrBy(context.Background(), key, find, 1).Val()

@@ -40,11 +40,11 @@
   <van-divider :style="{ color: '#1989fa', borderColor: '#1989fa', padding: '0 16px' }">评论</van-divider>
   <!--  展示评论内容 使用下拉刷新功能-->
 
-  <van-list
-      v-model:loading="loading"
-      :finished="finished"
-      finished-text="没有更多了"
-      @load="ArticleComment(this.CommentListPost,this.Config.CommentList)"
+  <van-list v-if="this.CommentListPost.Number!==undefined"
+            finished-text="已全部加载完成辣！"
+            v-model:loading="this.ListTrue.loading"
+            :finished="this.ListTrue.finished"
+            @load="ArticleComment(this.CommentListPost,this.Config.CommentList,this.ListTrue)"
   >
     <!--    评论列表-->
     <div class="comment" v-for="comment in Config.CommentList" v-bind:key="comment">
@@ -64,6 +64,7 @@
     </div>
 
   </van-list>
+
 
   <!--  评论圆角弹出层-->
   <van-popup
@@ -121,18 +122,7 @@ export default {
           ]
         ],
         // 评论列表
-        CommentList: [{
-          "ID": 2,
-          "Uid": "1657156821922318800",
-          "AuthorName": "StarYuhen",
-          "AuthImg": "https://q1.qlogo.cn/g?b=qq&nk=3446623843&s=640",
-          "CommentOneUid": "d28e3c19-2309-44ef-adfc-a810491a5b1e",
-          "CommentTwoUid": "",
-          "CommentText": "测试一级评论",
-          "CreatedAt": "2022-07-07T11:20:41.745+08:00",
-          "UpdatedAt": "2022-07-07T11:20:41.745+08:00",
-          "DeletedAt": null
-        }],
+        CommentList: [],
       },
       ArticleContent: {
         ID: "",
@@ -158,26 +148,30 @@ export default {
       },
       CommentListPost: {},
       CommentContent: "",
+      ListTrue: {
+        loading: false,
+        finished: false,
+      },
       onClickLeft
     }
   },
   async mounted() {
     // 先关闭底部的导航栏
     console.log(this.$refs.TabBar)
-
     console.log(this.$route.path)
     let id = this.$route.path.split("/")[2]
     this.ArticleContent = await TouristApi.GetArticleContent(id)
     // 同步请求评论列表--先生成请求内容
-    let Comment = {
+
+    this.CommentListPost = {
       UID: this.ArticleContent.ID,
-      Number: 1,
+      Number: 0,
       Type: false,
       CommentUID: "",
       ClassificationUID: this.ArticleContent.ArticleData.ClassificationUID
     }
-    this.Config.CommentList = await UserApi.PostCommentOne(Comment)
-    this.CommentListPost = Comment
+    // this.Config.CommentList = await UserApi.PostCommentOne(this.CommentListPost)
+    console.log("储存的请求内容接口", this.CommentListPost)
   },
   methods: {
     // 子组件传递的值更改父组件
@@ -190,11 +184,15 @@ export default {
       Toast(data.msg)
     },
     // 请求文章评论
-    ArticleComment: async (comment, list) => {
+    ArticleComment: async (comment, list, ListTrue) => {
       console.log("触发了评论更新")
       comment.Number++
       let data = await UserApi.PostCommentOne(comment)
+      if (data.length === 0) {
+        ListTrue.finished = true
+      }
       list.push(...data)
+      ListTrue.loading = false
     }
   }
 

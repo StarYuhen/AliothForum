@@ -16,7 +16,7 @@ const RecomMend = () => import("../../components/RecomMend")
 const settingUI = () => import("../../components/settingUI")
 const ForumUI = () => import("../../components/ForumUI")
 const Article = () => import("../../components/ArticleContent.vue")
-
+const InsideTheForum = () => import("../../components/Moblie/UI/InsideTheForum")
 const routes = [{
     path: "/", name: "RecomMend", component: RecomMend
 }, {
@@ -25,6 +25,8 @@ const routes = [{
     path: "/forum", name: "ForumUI", component: ForumUI
 }, {
     path: "/article/:id", name: "Article", component: Article
+}, {
+    path: "/insideForum/:uid", name: "InsideForum", component: InsideTheForum
 }]
 
 

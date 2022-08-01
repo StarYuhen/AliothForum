@@ -15,13 +15,22 @@
       <van-icon name="star"/>
       <text>收藏的贴吧</text>
     </div>
+    <van-grid square>
+      <van-grid-item class="truncate " v-for="value in Config.CollectedTab"
+                     :key="value" :icon="value.ImgURL" :text="value.Name"
+                     @click="this.$router.push('/InsideForum/'+value.UID)"/>
+    </van-grid>
+
+
   </div>
+
 </template>
 
 <script>
 // 论坛页面，获取推荐论坛和已经关注的论坛
 
 import TouristApi from "@/assets/js/RouterTourist";
+import UserApi from "@/assets/js/RouterUser";
 
 export default {
   name: "ForumUI",
@@ -29,7 +38,8 @@ export default {
   data() {
     return {
       Config: {
-        RandomRecommend: []
+        RandomRecommend: [],
+        CollectedTab: []
       }
     }
   },
@@ -38,6 +48,8 @@ export default {
     // 赋值给随机推荐论坛列表
     this.Config.RandomRecommend = Random.data
     console.log("返回的数据内容长度", this.Config.RandomRecommend.length)
+    let collect = await UserApi.CollectedTab()
+    this.Config.CollectedTab = collect.data
   },
   methods: {},
 }

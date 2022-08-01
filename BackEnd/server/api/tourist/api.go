@@ -185,6 +185,7 @@ func GetArticleContent(ctx *gin.Context) {
 }
 
 // RandomRecommendForum 随机获取推荐论坛
+// 不需要判断是否收藏过
 func RandomRecommendForum(ctx *gin.Context) {
 	list, err := ForumListTable.RandomRecommend()
 	if err != nil {
@@ -225,5 +226,10 @@ func ArticleRandomIO(ctx *gin.Context) {
 	}
 	// 直接返回结果
 	ctx.JSON(http.StatusOK, expen.Success(List, "请求首页随机文章成功"))
+
+}
+
+// ForumDetails 获取指定论坛信息
+func ForumDetails(ctx *gin.Context) {
 
 }

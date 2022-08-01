@@ -59,6 +59,12 @@ service.interceptors.response.use(function (response) {
     // 只提示请求错误的情况
     if (response.data.code !== 200) {
         Toast(response.data.msg)
+        return
+    }
+
+    // 发送特地需要toast的api
+    if (response.data.code === 444) {
+        Toast(response.data.msg)
     }
 
 

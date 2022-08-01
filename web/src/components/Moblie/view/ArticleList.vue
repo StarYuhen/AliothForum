@@ -1,7 +1,10 @@
 <template>
   <!--  内容使用列表刷新-->
   <van-list
-      @load="OnLoadArticle(this.List)"
+      finished-text="已全部加载完成辣！"
+      v-model:loading="this.ListTrue.loading"
+      :finished="this.ListTrue.finished"
+      @load="OnLoadArticle(this.Type,this.List,this.ListTrue)"
   >
     <div v-for="i in List" v-bind:key="i.id" @click="this.$router.push('/article/'+i.Article.Uid)">
       <div style="height: 0.7rem;width: 100%;background-color: #f4f4f5;"></div>
@@ -61,29 +64,36 @@ export default {
   props: ['Type'],
   data() {
     return {
-      List: []
+      List: [],
+      ListTrue: {
+        loading: false,
+        finished: false,
+      }
     }
   },
 
   async mounted() {
-    // 请求随机推荐内容,未真则是首页推荐内容
-    if (this.Type) {
-      // 首页推荐接口
-      let data = await TouristApi.GetRandomIndexArticle()
-      this.List = data.data
-      if (data.data.length === 0) {
-        Toast("压根没人写文章（哭）")
-      }
-    } else {
-      // 论坛内的推荐文章
-    }
+
 
   },
   methods: {
     // 再次请求加载内容
-    OnLoadArticle: async (list) => {
-      let data = await TouristApi.GetRandomIndexArticle()
-      list.push(...data.data)
+    OnLoadArticle: async (Type, list, ListTrue) => {
+      // 请求随机推荐内容,未真则是首页推荐内容
+      if (Type) {
+        // 首页推荐接口
+        let data = await TouristApi.GetRandomIndexArticle()
+        if (data.data.length === 0) {
+          Toast("压根没人写文章（哭）")
+          ListTrue.finished = true
+          return
+        }
+        list.push(...data.data)
+
+      } else {
+        // 论坛内的推荐文章
+      }
+      ListTrue.loading = false
     }
   }
 }
