@@ -15,7 +15,7 @@ type ForumList struct {
 // ForumIMGAndName 读取论坛头像和昵称
 func ForumIMGAndName(uid string) ForumList {
 	var f ForumList
-	config.MysqlURL.Table("forum_list").Select("Name", "ImgUrl").Where("uid", uid).First(&f)
+	config.MysqlURL.Table("forum_list").Select("id", "uid", "Name", "ImgUrl", "Src").Where("uid", uid).First(&f)
 	return f
 }
 

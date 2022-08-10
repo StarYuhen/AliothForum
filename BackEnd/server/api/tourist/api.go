@@ -231,5 +231,40 @@ func ArticleRandomIO(ctx *gin.Context) {
 
 // ForumDetails 获取指定论坛信息
 func ForumDetails(ctx *gin.Context) {
+	UID := ctx.Query("uid")
+	f := ForumListTable.ForumIMGAndName(UID)
+	ctx.JSON(http.StatusOK, expen.Success(f, "请求论坛信息成功"))
+}
 
+// ForumArticle 获取论坛内的随机推荐内容
+func ForumArticle(ctx *gin.Context) {
+	// 获取数据库的随机推荐文章
+	uid := ctx.Query("uid")
+	// 从redis读取文章ID，然后查询数据并行获取结果
+	List := make([]struct {
+		All     *function.ArticleRedis `json:"All"`
+		Article *service.Table         `json:"Article"`
+	}, 6)
+	t, err := service.RandomArticle(uid)
+
+	if err != nil {
+		logrus.Error("请求随机推荐文章失败:", err)
+		ctx.JSON(http.StatusOK, expen.HttpToast(err, "请求随机推荐文章失败"))
+		return
+	}
+
+	for i, v := range t {
+		// 查询的redis数据插入进去
+		str := expen.HashReadAll(config.RedisArticle, v.Uid)
+		// 直接遍历到redis 结构体内容去
+		all := new(function.ArticleRedis)
+		if err := mapstructure.WeakDecode(str, all); err != nil || all == nil {
+			logrus.Error("转换Redis中的文章数据失败:", err)
+			continue
+		} else {
+			List[i].All = all
+		}
+		List[i].Article = &v
+	}
+	ctx.JSON(http.StatusOK, expen.Success(List, "请求随机推荐文章成功"))
 }

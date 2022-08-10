@@ -23,6 +23,8 @@ var tmpl embed.FS
 
 // GinServer 启动gin服务框架
 func GinServer() {
+	// release or debug or test
+	gin.SetMode(config.StoreConfig.Version.GinMode)
 	engine := gin.Default()
 	// 绑定模板文件
 	engine.SetHTMLTemplate(template.Must(template.New("").ParseFS(tmpl, "tmpl/*.tmpl")))

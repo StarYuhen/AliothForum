@@ -4,7 +4,7 @@
       finished-text="已全部加载完成辣！"
       v-model:loading="this.ListTrue.loading"
       :finished="this.ListTrue.finished"
-      @load="OnLoadArticle(this.Type,this.List,this.ListTrue)"
+      @load="OnLoadArticle(this.Type,this.List,this.ListTrue,this.Uid)"
   >
     <div v-for="i in List" v-bind:key="i.id" @click="this.$router.push('/article/'+i.Article.Uid)">
       <div style="height: 0.7rem;width: 100%;background-color: #f4f4f5;"></div>
@@ -61,7 +61,7 @@ export default {
   name: "ArticleList",
   // type=true 则是首页，type=false 则是论坛
   // todo 还在写首页的
-  props: ['Type'],
+  props: ['Type', "Uid"],
   data() {
     return {
       List: [],
@@ -78,7 +78,7 @@ export default {
   },
   methods: {
     // 再次请求加载内容
-    OnLoadArticle: async (Type, list, ListTrue) => {
+    OnLoadArticle: async (Type, list, ListTrue, uid) => {
       // 请求随机推荐内容,未真则是首页推荐内容
       if (Type) {
         // 首页推荐接口
@@ -92,6 +92,14 @@ export default {
 
       } else {
         // 论坛内的推荐文章
+        let data = await TouristApi.GetForumArticle(uid)
+        if (data.data.length === 0) {
+          Toast("压根没人写文章（哭）")
+          ListTrue.finished = true
+          return
+        }
+        list.push(...data.data)
+
       }
       ListTrue.loading = false
     }

@@ -2,7 +2,7 @@ import {createApp} from 'vue'
 //绑定起始vue
 import App from './App.vue'
 // //按需引用vant组件
-import Vant from 'vant'
+import Vant, {Lazyload} from 'vant'
 //绑定css文件
 import 'vant/lib/index.css';
 import router from "@/assets/js/router";
@@ -41,9 +41,13 @@ const app = createApp(App, {
 
 
 // // 绑定vant所有资源
-app.use(Vant, {
+app.use(Vant)
+// 实现图片与组件懒加载
+app.use(Lazyload, {
     lazyComponent: true,
 })
+
+
 
 // 绑定element资源
 app.use(ElementPlus)

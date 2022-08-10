@@ -12,14 +12,11 @@ const TouristApi = {
         })
         console.log("请求验证码的值", data)
         return data.data
-    },
-    // 登录账号
+    }, // 登录账号
     PostAccountLogin: async (account) => {
         let Bool = false
         await server.post("/api/tourist/loginAccount", {
-            User: account.UserMail,
-            Password: account.PassWord,
-            Captcha: account.Captcha
+            User: account.UserMail, Password: account.PassWord, Captcha: account.Captcha
         }).then(function (response) {
             if (response.data.code === 200) {
                 // 同时写入本地缓存
@@ -28,8 +25,7 @@ const TouristApi = {
             }
         })
         return !Bool
-    },
-    // 注册账号
+    }, // 注册账号
     PostRegisterAccount: async (account) => {
         let Bool = false
         if (account.PassWord !== account.PassWordS) {
@@ -37,10 +33,7 @@ const TouristApi = {
             return !Bool
         }
         await server.post("/api/tourist/registerAccount", {
-            User: account.UserMail,
-            UserName: account.UserName,
-            Password: account.PassWord,
-            Captcha: account.MailCaptcha
+            User: account.UserMail, UserName: account.UserName, Password: account.PassWord, Captcha: account.MailCaptcha
         }).then(function (response) {
             if (response.data.code === 200) {
                 // 同时写入本地缓存
@@ -49,12 +42,10 @@ const TouristApi = {
             }
         })
         return !Bool
-    },
-    // 发送邮件验证码
+    }, // 发送邮件验证码
     PostRegisterAccountMail: async (mail) => {
         await server.get("/api/tourist/registerAccountMail?mail=" + mail)
-    },
-    // 请求文章内容
+    }, // 请求文章内容
     GetArticleContent: async (id) => {
         let data
         await server.get("/api/tourist/article/" + id).then(function (response) {
@@ -63,8 +54,7 @@ const TouristApi = {
             data.Article.Content = marked(data.Article.Content)
         })
         return data
-    },
-    // 获取随机推荐论坛
+    }, // 获取随机推荐论坛
     GetRandomRecommendForum: async () => {
         let data
         await server.get("/api/tourist/RandomRecommendForum").then(function (response) {
@@ -72,13 +62,30 @@ const TouristApi = {
             console.log("随机论坛返回的内容：", data)
         })
         return data
-    },
-    // 获取随机首页文章
+    }, // 获取随机首页文章
     GetRandomIndexArticle: async () => {
         let data
         await server.get("/api/tourist/ArticleIndex").then(function (response) {
             data = response.data
+            console.log("随机首页文章返回的内容：", data)
+        })
+        return data
+    },
+    // 获取论坛信息
+    GetForumDetails: async (uid) => {
+        let data
+        await server.get("/api/tourist/ForumDetails?uid=" + uid).then(function (response) {
+            data = response.data
             console.log("随机论坛返回的内容：", data)
+        })
+        return data
+    },
+    // 获取随机推荐文章
+    GetForumArticle: async (uid) => {
+        let data
+        await server.get("/api/tourist/ForumArticle?uid=" + uid).then(function (response) {
+            data = response.data
+            console.log("随机推荐文章返回的内容：", data)
         })
         return data
     }

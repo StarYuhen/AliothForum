@@ -27,6 +27,7 @@ type version struct {
 	Web            float64 `yaml:"Web"`
 	WebArticle     string  `yaml:"WebArticle"`
 	BackEndArticle string  `yaml:"BackEndArticle"`
+	GinMode        string  `yaml:"GinMode"`
 }
 
 type mysqlConfig struct {

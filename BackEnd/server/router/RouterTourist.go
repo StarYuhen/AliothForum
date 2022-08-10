@@ -22,4 +22,8 @@ func TouristRouter(engine *gin.RouterGroup) {
 	engine.GET("/RandomRecommendForum", tourist.RandomRecommendForum)
 	// 请求首页随机文章
 	engine.GET("/ArticleIndex", tourist.ArticleRandomIO)
+	// 获取uid指定的论坛信息
+	engine.GET("/ForumDetails", tourist.ForumDetails)
+	// 请求论坛内的随机推荐文章
+	engine.GET("/ForumArticle", tourist.ForumArticle)
 }

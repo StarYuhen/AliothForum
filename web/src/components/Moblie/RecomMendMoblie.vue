@@ -7,7 +7,7 @@
       input-align="center"
   />
 
-  <ArticleList :Type="true"></ArticleList>
+  <ArticleList :Type="true" :Uid="Config.Search"></ArticleList>
 
 </template>
 

@@ -11,7 +11,7 @@ import (
 type Table struct {
 	ID         uint   `gorm:"primaryKey;autoIncrement" json:"ID,omitempty"` // 主键且自增
 	Uid        string `json:"Uid,omitempty"`                                // 创建文章时生成的时间戳ID
-	Title      string `json:"Title,omitempty"`                              // 文章标题
+	Title      string `json:"Title,omitempty" gorm:"unique"`                // 文章标题-并标记为唯一
 	Content    string `json:"Content,omitempty"`                            // 文章内容 最多50个字
 	AuthorName string `json:"AuthorName,omitempty"`                         // 作者昵称
 	AuthImg    string `json:"AuthImg,omitempty"`                            // 作者头像
@@ -46,6 +46,15 @@ func RandArticleURL(tableName string) {
 // CreateArticleContent 插入文章数据
 func CreateArticleContent(table Table, tableName string) error {
 	return config.MysqlURL.Table(tableName).Create(&table).Error
+}
+
+// RandomArticle 获取随机推荐6个文章
+func RandomArticle(tableName string) ([]Table, error) {
+	var t []Table
+	err := config.MysqlURL.Table(tableName).Select("distinct title,content").Where("id>=(?)",
+		config.MysqlURL.Table(tableName).Select("FLOOR( MAX(id) * RAND())")).Limit(6).
+		Find(&t).Error
+	return t, err
 }
 
 // CreateComment 插入评论数据
