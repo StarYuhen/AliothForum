@@ -5,9 +5,14 @@
 ## 更新情况
 
 因已掌握了所需要的知识且完成的大部分基础功能，跑路做框架去了。
+
 更新日志情况：
 <a href="https://github.com/StarYuhen/AliothForum/blob/master/Docx/%E6%9B%B4%E6%96%B0%E6%97%A5%E5%BF%97.md">
-所有更新日志</a>
+更新日志</a>
+
+<a href="https://www.yuhenm.com/archives/495.html">
+项目介绍</a>
+
 
 ## 项目技术功能优点
 

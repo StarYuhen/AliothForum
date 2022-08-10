@@ -53,6 +53,7 @@ export default {
     }
   },
   mounted() {
+    this.Config.Type = this.Type
     this.CreateArticle.AuthorUID = this.AuthorUID
     this.CreateArticle.ClassificationUID = this.ClassificationUID
     this.CreateArticle.CommentType = this.CommentType

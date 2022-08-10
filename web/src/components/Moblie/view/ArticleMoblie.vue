@@ -1,5 +1,5 @@
 <template>
-  <van-nav-bar title="文章" @click-left="onClickLeft" left-arrow/>
+  <van-nav-bar left-arrow title="文章" @click-left="onClickLeft"/>
   <div>
     <p class="text-left font-black text-black text-2xl">
       {{ ArticleContent.ArticleData.Title }}
@@ -8,7 +8,7 @@
     <div class="p-1 max-w-sm mx-auto bg-white rounded-xl shadow-md flex items-center space-x-4 shadow">
       <!-- ... -->
       <div class="flex-shrink-0">
-        <el-avatar class="float-left  w-12" :src="ArticleContent.Article.AuthorIMG" :lazy="true"/>
+        <el-avatar :lazy="true" :src="ArticleContent.Article.AuthorIMG" class="float-left  w-12"/>
       </div>
 
       <div>
@@ -26,7 +26,7 @@
   </div>
 
   <!--    文章内容-->
-  <div v-html="ArticleContent.Article.Content" class="markdown-body rounded-md pl-3 pr-3 pb-3 pt-3 shadow "></div>
+  <div class="markdown-body rounded-md pl-3 pr-3 pb-3 pt-3 shadow " v-html="ArticleContent.Article.Content"></div>
   <!--  点赞，分享，收藏，评论-->
   <van-grid :clickable=true icon-size="22px">
     <van-grid-item icon="like-o" text="点赞" @click="ArticleLikeUID(this.ArticleContent.ID)"/>
@@ -41,16 +41,16 @@
   <!--  展示评论内容 使用下拉刷新功能-->
 
   <van-list v-if="this.CommentListPost.Number!==undefined"
-            finished-text="已全部加载完成辣！"
             v-model:loading="this.ListTrue.loading"
             :finished="this.ListTrue.finished"
+            finished-text="已全部加载完成辣！"
             @load="ArticleComment(this.CommentListPost,this.Config.CommentList,this.ListTrue)"
   >
     <!--    评论列表-->
-    <div class="comment" v-for="comment in Config.CommentList" v-bind:key="comment">
+    <div v-for="comment in Config.CommentList" v-bind:key="comment" class="comment">
       <van-cell-group inset>
         <div class="flex-shrink-0">
-          <el-avatar class="comment-avatar float-left  w-12 " :src="comment.AuthImg" :lazy="true"/>
+          <el-avatar :lazy="true" :src="comment.AuthImg" class="comment-avatar float-left  w-12 "/>
         </div>
         <div class="comment-name font-medium max-w-lg">
           <text class="text-sm font-normal">{{ comment.AuthorName }}</text>
@@ -69,15 +69,15 @@
   <!--  评论圆角弹出层-->
   <van-popup
       v-model:show="Config.Comment"
-      position="bottom"
-      closeable
       :style="{ height: '100%' }"
+      closeable
+      position="bottom"
   >
-    <ArticleAndComment :Type=false
-                       :AuthorUID=this.ArticleContent.ArticleData.AuthorUID
+    <ArticleAndComment :AuthorUID=this.ArticleContent.ArticleData.AuthorUID
                        :ClassificationUID=this.ArticleContent.ArticleData.ClassificationUID
                        :CommentType=this.Config.CommentType
                        :CommentUID=this.Config.CommentUID
+                       :Type=false
                        @FalseCommentPopup="FalseCommentPopup(this.Config)"
     ></ArticleAndComment>
   </van-popup>
